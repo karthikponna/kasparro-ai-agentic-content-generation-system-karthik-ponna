@@ -44,8 +44,7 @@ Built a **LangGraph-based multi-agent content generation system** with 6 special
 The system follows a **directed acyclic graph (DAG)** architecture orchestrated by LangGraph's StateGraph:
 
 <p align="center">
-    <img src="static/agentic_architecture.png" alt="Architecture" width="700">
-  </a>
+    <img src="../static/agentic_architecture.png" alt="Architecture" width="700">
 </p>
 
 - additionally the main code is organised inside a single folder src/
