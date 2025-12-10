@@ -99,10 +99,10 @@ class WorkflowState(BaseModel):
     content_blocks: Optional[Dict[str, ContentBlock]] = Field(default=None, description="Content blocks")
     fictional_product_b: Optional[Dict[str, Any]] = Field(default=None, description="Fictional product for comparison")
     
-    # # Outputs
-    # faq_page: Optional[FAQPage] = Field(default=None, description="Generated FAQ page")
-    # product_page: Optional[ProductPage] = Field(default=None, description="Generated product page")
-    # comparison_page: Optional[ComparisonPage] = Field(default=None, description="Generated comparison page")
+    # Outputs
+    faq_page: Optional[FAQPage] = Field(default=None, description="Generated FAQ page")
+    product_page: Optional[ProductPage] = Field(default=None, description="Generated product page")
+    comparison_page: Optional[ComparisonPage] = Field(default=None, description="Generated comparison page")
     
     # Control
     error: Optional[str] = Field(default=None, description="Error message if any")
