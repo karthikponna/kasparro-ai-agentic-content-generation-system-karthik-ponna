@@ -1,0 +1,81 @@
+{
+  "page_type": "Comparison",
+  "product_a": {
+    "product_name": "GlowBoost Vitamin C Serum",
+    "concentration": "10% Vitamin C",
+    "skin_type": [
+      "Oily",
+      "Combination"
+    ],
+    "key_ingredients": [
+      "Vitamin C",
+      "Hyaluronic Acid"
+    ],
+    "benefits": [
+      "Brightening",
+      "Fades dark spots"
+    ],
+    "price": "₹699"
+  },
+  "product_b": {
+    "product_name": "RadianceC Serum",
+    "concentration": "12% Vitamin C",
+    "skin_type": [
+      "Normal",
+      "Dry",
+      "Combination"
+    ],
+    "key_ingredients": [
+      "Vitamin C",
+      "Niacinamide",
+      "Green Tea Extract"
+    ],
+    "benefits": [
+      "Enhances skin radiance",
+      "Boosts hydration",
+      "Reduces redness",
+      "Minimizes fine lines"
+    ],
+    "price": "₹799"
+  },
+  "comparison_matrix": [
+    {
+      "feature_name": "Concentration",
+      "product_a_value": "10% Vitamin C",
+      "product_b_value": "12% Vitamin C",
+      "winner": "Product B"
+    },
+    {
+      "feature_name": "Price",
+      "product_a_value": "₹699",
+      "product_b_value": "₹799",
+      "winner": "Product A"
+    },
+    {
+      "feature_name": "Key Ingredients",
+      "product_a_value": "Vitamin C, Hyaluronic Acid",
+      "product_b_value": "Vitamin C, Niacinamide, Green Tea Extract",
+      "winner": "Product B"
+    },
+    {
+      "feature_name": "Primary Benefits",
+      "product_a_value": "Brightening, Fades dark spots",
+      "product_b_value": "Enhances skin radiance, Boosts hydration, Reduces redness, Minimizes fine lines",
+      "winner": "Product B"
+    },
+    {
+      "feature_name": "Skin Type Suitability",
+      "product_a_value": "Oily, Combination",
+      "product_b_value": "Normal, Dry, Combination",
+      "winner": "Product B"
+    },
+    {
+      "feature_name": "Value for Money",
+      "product_a_value": "Good",
+      "product_b_value": "Good",
+      "winner": "Product A"
+    }
+  ],
+  "summary": "The GlowBoost Vitamin C Serum (Product A) has a slightly lower concentration of Vitamin C compared to the RadianceC Serum (Product B), but it is priced lower, making it more accessible for budget-conscious consumers. Product B, however, offers a broader range of benefits including hydration, redness reduction, and anti-aging properties, which may appeal more to those with normal to dry skin types. Both products contain Vitamin C, but Product B adds Niacinamide and Green Tea Extract, enhancing its overall skincare profile. In terms of skin type suitability, Product B caters to a wider audience, while Product A is more tailored to oily and combination skin types. In terms of value for money, Product A is slightly better due to its lower price point while still providing effective benefits.",
+  "recommendation": "For users with oily or combination skin seeking a brightening serum at a lower price, GlowBoost Vitamin C Serum is a great choice. However, for those with normal to dry skin types looking for a more comprehensive serum with additional benefits such as hydration and anti-aging properties, the RadianceC Serum is recommended despite its higher price."
+}
