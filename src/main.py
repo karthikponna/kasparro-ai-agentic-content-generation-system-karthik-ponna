@@ -8,6 +8,8 @@ from config import settings
 
 from workflow import run_workflow
 
+os.environ["OPENAI_API_KEY"] = settings.OPENAI_API_KEY
+
 
 def load_product_data() -> Dict[str, Any]:
     """
@@ -59,7 +61,7 @@ def save_json_output(data: Any, filename: str, output_dir: str = "output") -> No
 
 
 def main() -> None:
-    
+
     try:
 
         product_data = load_product_data()
