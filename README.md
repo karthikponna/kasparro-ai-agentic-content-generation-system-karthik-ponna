@@ -4,8 +4,8 @@ A modular agentic automation system built with **LangGraph** that automatically 
 
 ## 🛠️ Tech Stack
 
-- **LangGraph+** - Multi-agent workflow orchestration
-- **Pydantic+** - Data validation and structured outputs
+- **LangGraph** - Multi-agent workflow orchestration
+- **Pydantic** - Data validation and structured outputs
 - **OpenAI** - LLM for content generation
 - **uv** - Fast Python package management
 - **Makefile** - Automation and task running
@@ -41,7 +41,7 @@ source .venv/bin/activate
 uv sync
 ```
 
-### 3. Run the System
+### 3. Running the code
 
 ```bash
 make run-agent
