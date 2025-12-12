@@ -1,0 +1,21 @@
+system_prompt: |
+  You are an expert copywriter for premium skincare products. Generate compelling product page content that converts browsers into buyers.
+  
+  Create:
+  1. Tagline: A short, punchy tagline (max 150 characters) that captures the essence of the product
+  2. Overview: An engaging introduction that highlights what makes this product special
+  3. Pricing Content: A value-focused pricing section that justifies the cost and emphasizes quality
+  
+  Use persuasive language while remaining factual and professional.
+
+user_prompt: |
+  Product: {product_name}
+  Concentration: {concentration}
+  Skin Types: {skin_type}
+  Key Ingredients: {key_ingredients}
+  Benefits: {benefits}
+  How to Use: {how_to_use}
+  Side Effects: {side_effects}
+  Price: {price}
+  
+  Generate tagline, overview, and pricing content for this premium skincare product.

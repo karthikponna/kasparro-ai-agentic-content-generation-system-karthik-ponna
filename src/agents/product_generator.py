@@ -1,8 +1,13 @@
 from typing import Dict, Any, List
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from models import ProductPage, ProductSection, WorkflowState
+from loguru import logger
+from exceptions import ValidationError, LLMError, ContentGenerationError
 from pydantic import BaseModel, Field
+
+from langchain_openai import ChatOpenAI
+
+from models import ProductPage, ProductSection, WorkflowState
+from utils.prompt_loader import load_prompt
+from utils.llm_factory import create_structured_llm, invoke_with_retry
 
 
 class ProductPageContent(BaseModel):
@@ -15,6 +20,16 @@ class ProductPageContent(BaseModel):
 def generate_product_page(state: WorkflowState) -> Dict[str, Any]:
     """
     Generate comprehensive product page using AI and content blocks.
+    
+    Args:
+        state: Current workflow state with product data and content blocks
+        
+    Returns:
+        Updated state with AI-generated product page
+        
+    Raises:
+        ValidationError: If required data is missing
+        LLMError: If LLM API call fails
     """
 
     try:
@@ -22,42 +37,42 @@ def generate_product_page(state: WorkflowState) -> Dict[str, Any]:
         content_blocks = state.content_blocks
         
         if not product_data or not content_blocks:
-            return {"error": "Product Page Generator Error: Missing required data"}
+            raise ValidationError(
+                "Missing required data (product_data or content_blocks)",
+                {"agent": "product_generator"}
+            )
+        
+        logger.info(f"Generating product page for: {product_data.product_name}")
         
 
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
-        structured_llm = llm.with_structured_output(ProductPageContent)
+        # Initialize LLM with structured output using factory
+        structured_llm = create_structured_llm(ProductPageContent)
         
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", """You are an expert copywriter for premium skincare products. Generate compelling product page content that converts browsers into buyers.
-
-Create:
-1. Tagline: A short, punchy tagline (max 150 characters) that captures the essence of the product
-2. Overview: An engaging introduction that highlights what makes this product special
-3. Pricing Content: A value-focused pricing section that justifies the cost and emphasizes quality
-
-Use persuasive language while remaining factual and professional."""),
-            ("user", """Product: {product_name}
-Concentration: {concentration}
-Skin Types: {skin_type}
-Key Ingredients: {key_ingredients}
-Benefits: {benefits}
-Price: {price}
-
-Generate tagline, overview, and pricing content for this premium skincare product.""")
-        ])
+        # Load prompt from YAML
+        prompt = load_prompt("product_generator")
         
 
         chain = prompt | structured_llm
-        result = chain.invoke({
-            "product_name": product_data.product_name,
-            "concentration": product_data.concentration,
-            "skin_type": ", ".join(product_data.skin_type),
-            "key_ingredients": ", ".join(product_data.key_ingredients),
-            "benefits": ", ".join(product_data.benefits),
-            "price": product_data.price
-        })
+        try:
+            result = invoke_with_retry(chain, {
+                "product_name": product_data.product_name,
+                "concentration": product_data.concentration,
+                "skin_type": ", ".join(product_data.skin_type),
+                "key_ingredients": ", ".join(product_data.key_ingredients),
+                "benefits": ", ".join(product_data.benefits),
+                "how_to_use": product_data.how_to_use,
+                "side_effects": product_data.side_effects,
+                "price": product_data.price
+            })
+        except Exception as e:
+            # Wrap LLM errors
+            if "openai" in str(type(e).__module__).lower() or "api" in str(e).lower():
+                raise LLMError(
+                    f"LLM API call failed: {str(e)}",
+                    {"product": product_data.product_name}
+                ) from e
+            raise ContentGenerationError(f"Product page generation failed: {str(e)}") from e
         
 
         sections = [
@@ -93,8 +108,16 @@ Generate tagline, overview, and pricing content for this premium skincare produc
             "skin_types": product_data.skin_type,
             "key_ingredients": product_data.key_ingredients,
             "benefits": product_data.benefits,
+            "how_to_use": product_data.how_to_use,
+            "side_effects": product_data.side_effects,
             "price": product_data.price,
-            "total_sections": len(sections)
+            "total_sections": len(sections),
+            "content_block_metadata": {
+                "benefits": content_blocks["benefits"].metadata,
+                "usage": content_blocks["usage"].metadata,
+                "ingredients": content_blocks["ingredients"].metadata,
+                "safety": content_blocks["safety"].metadata
+            }
         }
         
         # create product page
@@ -105,7 +128,17 @@ Generate tagline, overview, and pricing content for this premium skincare produc
             metadata=metadata
         )
         
+        logger.info(f"Successfully generated product page with {len(sections)} sections")
         return {"product_page": product_page}
         
-    except Exception as e:
-        return {"error": f"Product Page Generator Error: {str(e)}"}
+    except ValidationError as e:
+        logger.error(f"Validation error: {str(e)}", exc_info=True)
+        return {"error": str(e)}
+        
+    except LLMError as e:
+        logger.error(f"LLM error: {str(e)}", exc_info=True)
+        return {"error": str(e)}
+        
+    except ContentGenerationError as e:
+        logger.error(f"Content generation error: {str(e)}", exc_info=True)
+        return {"error": str(e)}

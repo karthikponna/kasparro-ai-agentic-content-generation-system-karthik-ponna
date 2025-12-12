@@ -1,8 +1,11 @@
 from typing import Dict, Any, Literal
 
+from loguru import logger
+
 from langgraph.graph import StateGraph, END
 
 from models import WorkflowState
+from exceptions import WorkflowBaseException
 from agents.parser_agent import parse_product_data
 from agents.questions_generator import generate_questions
 from agents.content_logic import create_content_blocks
@@ -118,6 +121,9 @@ def run_workflow(product_data: Dict[str, Any]) -> WorkflowState:
         Final workflow state with all generated content
     """
     try:
+        logger.info("Starting content generation workflow")
+        logger.debug(f"Input product data: {product_data.get('product_name', 'Unknown')}")
+
         # Create initial state
         initial_state = WorkflowState(raw_product_data=product_data)
         
@@ -130,14 +136,30 @@ def run_workflow(product_data: Dict[str, Any]) -> WorkflowState:
         
         # Convert dictionary to WorkflowState object
         final_state = WorkflowState(**final_state_dict)
+
+        if final_state.error:
+            logger.warning(f"Workflow completed with errors: {final_state.error}")
+        else:
+            logger.info("Workflow completed successfully")
         
         return final_state
         
-    except Exception as e:
-        # Return error state
+    except WorkflowBaseException as e:
+        # Handle custom workflow exceptions
+        error_msg = f"Workflow execution error: {str(e)}"
+        logger.error(error_msg, exc_info=True)
         error_state = WorkflowState(
             raw_product_data=product_data,
-            error=f"Workflow execution error: {str(e)}"
+            error=error_msg
         )
         return error_state
-
+        
+    except Exception as e:
+        # Handle unexpected errors
+        error_msg = f"Unexpected workflow error: {str(e)}"
+        logger.critical(error_msg, exc_info=True)
+        error_state = WorkflowState(
+            raw_product_data=product_data,
+            error=error_msg
+        )
+        return error_state

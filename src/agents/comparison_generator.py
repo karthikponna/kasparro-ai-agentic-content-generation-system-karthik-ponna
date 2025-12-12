@@ -1,8 +1,14 @@
 from typing import Dict, Any, List
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from models import ComparisonPage, ComparisonFeature, WorkflowState
+from loguru import logger
+from exceptions import ValidationError, LLMError, ContentGenerationError
 from pydantic import BaseModel, Field
+
+from langchain_openai import ChatOpenAI
+
+from models import ComparisonPage, ComparisonFeature, WorkflowState
+from utils.prompt_loader import load_prompt
+from utils.llm_factory import create_structured_llm, invoke_with_retry
+from config import settings
 
 
 class FictionalProduct(BaseModel):
@@ -25,135 +31,134 @@ class ComparisonAnalysis(BaseModel):
 def generate_fictional_product_b(state: WorkflowState) -> Dict[str, Any]:
     """
     Generate fictional Product B for comparison.
+    
+    Args:
+        state: Current workflow state with product data
+        
+    Returns:
+        Updated state with fictional Product B
+        
+    Raises:
+        ValidationError: If product data is missing
+        LLMError: If LLM API call fails
     """
     try:
         product_data = state.product_data
         if not product_data:
-            return {"error": "Comparison Generator Error: No product data available"}
+            raise ValidationError(
+                "No product data available",
+                {"agent": "comparison_generator", "function": "generate_fictional_product_b"}
+            )
+        
+        logger.info(f"Generating fictional competitor for: {product_data.product_name}")
         
 
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.8)
-        structured_llm = llm.with_structured_output(FictionalProduct)
+        # Initialize LLM with structured output using factory
+        structured_llm = create_structured_llm(FictionalProduct)
         
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", """You are creating a fictional competitor product for comparison purposes.
-The product should be realistic and comparable but have some differences in formulation, pricing, and benefits.
-Make it a credible alternative with its own strengths and weaknesses."""),
-            ("user", """Create a fictional Vitamin C serum product to compare against:
-
-Original Product:
-- Name: {product_name}
-- Concentration: {concentration}
-- Skin Types: {skin_type}
-- Key Ingredients: {key_ingredients}
-- Benefits: {benefits}
-- Price: {price}
-
-Generate a fictional competing product with similar but different specifications.""")
-        ])
+        # Load prompt from YAML
+        prompt = load_prompt("comparison_generator", "fictional_product")
         
 
         chain = prompt | structured_llm
-        fictional_product = chain.invoke({
-            "product_name": product_data.product_name,
-            "concentration": product_data.concentration,
-            "skin_type": ", ".join(product_data.skin_type),
-            "key_ingredients": ", ".join(product_data.key_ingredients),
-            "benefits": ", ".join(product_data.benefits),
-            "price": product_data.price
-        })
+        try:
+            fictional_product = invoke_with_retry(chain, {
+                "product_name": product_data.product_name,
+                "concentration": product_data.concentration,
+                "skin_type": ", ".join(product_data.skin_type),
+                "key_ingredients": ", ".join(product_data.key_ingredients),
+                "benefits": ", ".join(product_data.benefits),
+                "price": product_data.price
+            })
+        except Exception as e:
+            if "openai" in str(type(e).__module__).lower() or "api" in str(e).lower():
+                raise LLMError(
+                    f"LLM API call failed: {str(e)}",
+                    {"product": product_data.product_name}
+                ) from e
+            raise ContentGenerationError(f"Fictional product generation failed: {str(e)}") from e
         
-        # convert to dict
-        fictional_product_dict = {
-            "product_name": fictional_product.product_name,
-            "concentration": fictional_product.concentration,
-            "skin_type": fictional_product.skin_type,
-            "key_ingredients": fictional_product.key_ingredients,
-            "benefits": fictional_product.benefits,
-            "price": fictional_product.price
-        }
+        # Return Pydantic model directly as dict
+        fictional_product_dict = fictional_product.model_dump()
         
+        logger.info(f"Successfully generated fictional product: {fictional_product.product_name}")
         return {"fictional_product_b": fictional_product_dict}
         
-    except Exception as e:
-        return {"error": f"Fictional Product Generator Error: {str(e)}"}
+    except ValidationError as e:
+        logger.error(f"Validation error: {str(e)}", exc_info=True)
+        return {"error": str(e)}
+        
+    except LLMError as e:
+        logger.error(f"LLM error: {str(e)}", exc_info=True)
+        return {"error": str(e)}
+        
+    except ContentGenerationError as e:
+        logger.error(f"Content generation error: {str(e)}", exc_info=True)
+        return {"error": str(e)}
 
 
 def generate_comparison_page(state: WorkflowState) -> Dict[str, Any]:
     """
     Generate comparison page between Product A and Product B.
+    
+    Args:
+        state: Current workflow state with both products
+        
+    Returns:
+        Updated state with comparison page
+        
+    Raises:
+        ValidationError: If product data is missing
+        LLMError: If LLM API call fails
     """
     try:
         product_data = state.product_data
         fictional_product_b = state.fictional_product_b
         
         if not product_data or not fictional_product_b:
-            return {"error": "Comparison Generator Error: Missing product data"}
+            raise ValidationError(
+                "Missing product data for comparison",
+                {"agent": "comparison_generator", "function": "generate_comparison_page"}
+            )
+        
+        logger.info(f"Generating comparison page: {product_data.product_name} vs {fictional_product_b['product_name']}")
         
 
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
-        structured_llm = llm.with_structured_output(ComparisonAnalysis)
+        # Initialize LLM with structured output using factory
+        structured_llm = create_structured_llm(ComparisonAnalysis)
         
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", """You are an expert at comparing skincare products objectively.
-Create a detailed comparison matrix highlighting key differences and similarities.
-Provide an unbiased analysis with a recommendation based on different user needs."""),
-            ("user", """Compare these two products:
-
-Product A: {product_a_name}
-- Concentration: {product_a_concentration}
-- Skin Types: {product_a_skin_type}
-- Key Ingredients: {product_a_ingredients}
-- Benefits: {product_a_benefits}
-- Price: {product_a_price}
-
-Product B: {product_b_name}
-- Concentration: {product_b_concentration}
-- Skin Types: {product_b_skin_type}
-- Key Ingredients: {product_b_ingredients}
-- Benefits: {product_b_benefits}
-- Price: {product_b_price}
-
-Create a comparison matrix with features like:
-- Concentration
-- Price
-- Key Ingredients
-- Primary Benefits
-- Skin Type Suitability
-- Value for Money
-
-For each feature, indicate which product performs better (winner field).
-Provide a comprehensive summary and recommendation.""")
-        ])
+        # Load prompt from YAML
+        prompt = load_prompt("comparison_generator", "comparison_page")
         
         # generate comparison
         chain = prompt | structured_llm
-        comparison = chain.invoke({
-            "product_a_name": product_data.product_name,
-            "product_a_concentration": product_data.concentration,
-            "product_a_skin_type": ", ".join(product_data.skin_type),
-            "product_a_ingredients": ", ".join(product_data.key_ingredients),
-            "product_a_benefits": ", ".join(product_data.benefits),
-            "product_a_price": product_data.price,
-            "product_b_name": fictional_product_b["product_name"],
-            "product_b_concentration": fictional_product_b["concentration"],
-            "product_b_skin_type": ", ".join(fictional_product_b["skin_type"]),
-            "product_b_ingredients": ", ".join(fictional_product_b["key_ingredients"]),
-            "product_b_benefits": ", ".join(fictional_product_b["benefits"]),
-            "product_b_price": fictional_product_b["price"]
-        })
+        try:
+            comparison = invoke_with_retry(chain, {
+                "product_a_name": product_data.product_name,
+                "product_a_concentration": product_data.concentration,
+                "product_a_skin_type": ", ".join(product_data.skin_type),
+                "product_a_ingredients": ", ".join(product_data.key_ingredients),
+                "product_a_benefits": ", ".join(product_data.benefits),
+                "product_a_price": product_data.price,
+                "product_b_name": fictional_product_b["product_name"],
+                "product_b_concentration": fictional_product_b["concentration"],
+                "product_b_skin_type": ", ".join(fictional_product_b["skin_type"]),
+                "product_b_ingredients": ", ".join(fictional_product_b["key_ingredients"]),
+                "product_b_benefits": ", ".join(fictional_product_b["benefits"]),
+                "product_b_price": fictional_product_b["price"]
+            })
+        except Exception as e:
+            if "openai" in str(type(e).__module__).lower() or "api" in str(e).lower():
+                raise LLMError(
+                    f"LLM API call failed: {str(e)}",
+                    {"product_a": product_data.product_name, "product_b": fictional_product_b["product_name"]}
+                ) from e
+            raise ContentGenerationError(f"Comparison page generation failed: {str(e)}") from e
         
         # create product dictionaries for the page
-        product_a_dict = {
-            "product_name": product_data.product_name,
-            "concentration": product_data.concentration,
-            "skin_type": product_data.skin_type,
-            "key_ingredients": product_data.key_ingredients,
-            "benefits": product_data.benefits,
-            "price": product_data.price
-        }
+        product_a_dict = product_data.model_dump()
         
         # create comparison page
         comparison_page = ComparisonPage(
@@ -164,7 +169,18 @@ Provide a comprehensive summary and recommendation.""")
             recommendation=comparison.recommendation
         )
         
+        logger.info(f"Successfully generated comparison page with {len(comparison.comparison_matrix)} comparison features")
+
         return {"comparison_page": comparison_page}
         
-    except Exception as e:
-        return {"error": f"Comparison Page Generator Error: {str(e)}"}
+    except ValidationError as e:
+        logger.error(f"Validation error: {str(e)}", exc_info=True)
+        return {"error": str(e)}
+        
+    except LLMError as e:
+        logger.error(f"LLM error: {str(e)}", exc_info=True)
+        return {"error": str(e)}
+        
+    except ContentGenerationError as e:
+        logger.error(f"Content generation error: {str(e)}", exc_info=True)
+        return {"error": str(e)}

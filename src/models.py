@@ -43,7 +43,7 @@ class QAPair(BaseModel):
     """Question and answer pair for FAQ."""
     question: str = Field(..., description="Question text")
     answer: str = Field(..., description="Answer text")
-    category: str = Field(..., description="Question category")
+    category: QuestionCategory = Field(..., description="Question category")
 
 
 class FAQPage(BaseModel):

@@ -15,10 +15,12 @@
       "Brightening",
       "Fades dark spots"
     ],
+    "how_to_use": "Apply 2-3 drops in the morning before sunscreen",
+    "side_effects": "Mild tingling for sensitive skin",
     "price": "₹699"
   },
   "product_b": {
-    "product_name": "RadianceC Serum",
+    "product_name": "Radiance Plus Vitamin C Serum",
     "concentration": "12% Vitamin C",
     "skin_type": [
       "Normal",
@@ -27,16 +29,17 @@
     ],
     "key_ingredients": [
       "Vitamin C",
+      "Ferulic Acid",
       "Niacinamide",
-      "Green Tea Extract"
+      "Hyaluronic Acid"
     ],
     "benefits": [
-      "Enhances skin radiance",
-      "Boosts hydration",
-      "Reduces redness",
-      "Minimizes fine lines"
+      "Enhances radiance",
+      "Reduces fine lines",
+      "Fades pigmentation",
+      "Hydrates skin"
     ],
-    "price": "₹799"
+    "price": "₹899"
   },
   "comparison_matrix": [
     {
@@ -48,19 +51,19 @@
     {
       "feature_name": "Price",
       "product_a_value": "₹699",
-      "product_b_value": "₹799",
+      "product_b_value": "₹899",
       "winner": "Product A"
     },
     {
       "feature_name": "Key Ingredients",
       "product_a_value": "Vitamin C, Hyaluronic Acid",
-      "product_b_value": "Vitamin C, Niacinamide, Green Tea Extract",
+      "product_b_value": "Vitamin C, Ferulic Acid, Niacinamide, Hyaluronic Acid",
       "winner": "Product B"
     },
     {
       "feature_name": "Primary Benefits",
       "product_a_value": "Brightening, Fades dark spots",
-      "product_b_value": "Enhances skin radiance, Boosts hydration, Reduces redness, Minimizes fine lines",
+      "product_b_value": "Enhances radiance, Reduces fine lines, Fades pigmentation, Hydrates skin",
       "winner": "Product B"
     },
     {
@@ -71,11 +74,11 @@
     },
     {
       "feature_name": "Value for Money",
-      "product_a_value": "Good",
-      "product_b_value": "Good",
+      "product_a_value": "Higher value at ₹699",
+      "product_b_value": "Lower value at ₹899",
       "winner": "Product A"
     }
   ],
-  "summary": "The GlowBoost Vitamin C Serum (Product A) has a slightly lower concentration of Vitamin C compared to the RadianceC Serum (Product B), but it is priced lower, making it more accessible for budget-conscious consumers. Product B, however, offers a broader range of benefits including hydration, redness reduction, and anti-aging properties, which may appeal more to those with normal to dry skin types. Both products contain Vitamin C, but Product B adds Niacinamide and Green Tea Extract, enhancing its overall skincare profile. In terms of skin type suitability, Product B caters to a wider audience, while Product A is more tailored to oily and combination skin types. In terms of value for money, Product A is slightly better due to its lower price point while still providing effective benefits.",
-  "recommendation": "For users with oily or combination skin seeking a brightening serum at a lower price, GlowBoost Vitamin C Serum is a great choice. However, for those with normal to dry skin types looking for a more comprehensive serum with additional benefits such as hydration and anti-aging properties, the RadianceC Serum is recommended despite its higher price."
+  "summary": "Product A offers a lower price point and is suitable for oily and combination skin, making it a more economical choice for those skin types. However, Product B, with a higher concentration of Vitamin C and a more comprehensive ingredient profile, provides additional benefits like hydration and anti-aging properties. It is better suited for a wider range of skin types and offers enhanced benefits overall despite its higher price. Therefore, while Product A is great for budget-conscious consumers with specific skin types, Product B is more effective for those looking for a more potent serum with additional skin benefits.",
+  "recommendation": "For users with oily or combination skin looking for a budget-friendly option, Product A (GlowBoost Vitamin C Serum) is recommended. For those with normal, dry, or combination skin who seek a more potent serum with multiple benefits, Product B (Radiance Plus Vitamin C Serum) is the better choice."
 }

@@ -1,0 +1,27 @@
+system_prompt: |
+  You are an expert at creating FAQ content for skincare products.
+  Generate clear, informative answers for ALL provided questions based on the product information.
+  Ensure answers are helpful, accurate, and based only on the given product data.
+  You must answer ALL questions provided - do not skip any.
+
+user_prompt: |
+  Product Information:
+  Name: {product_name}
+  Concentration: {concentration}
+  Skin Type: {skin_type}
+  Key Ingredients: {key_ingredients}
+  Benefits: {benefits}
+  How to Use: {how_to_use}
+  Side Effects: {side_effects}
+  Price: {price}
+  
+  Content Blocks:
+  Benefits: {benefits_block}
+  Usage: {usage_block}
+  Ingredients: {ingredients_block}
+  Safety: {safety_block}
+  
+  Questions to answer ({question_count} total):
+  {questions_list}
+  
+  Generate Q&A pairs for ALL {question_count} questions above.

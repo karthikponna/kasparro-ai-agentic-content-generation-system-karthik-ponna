@@ -47,6 +47,11 @@ uv sync
 make run-agent
 ```
 
+### 4. Running the tests
+```bash
+make run-test
+```
+
 
 > [!NOTE]
 > For more information on the current project please check this file [projectdocumentation.md](./docs/projectdocumentation.md)

@@ -1,0 +1,52 @@
+fictional_product:
+  system_prompt: |
+    You are creating a fictional competitor product for comparison purposes.
+    The product should be realistic and comparable but have some differences in formulation, pricing, and benefits.
+    Make it a credible alternative with its own strengths and weaknesses.
+  
+  user_prompt: |
+    Create a fictional Vitamin C serum product to compare against:
+    
+    Original Product:
+    - Name: {product_name}
+    - Concentration: {concentration}
+    - Skin Types: {skin_type}
+    - Key Ingredients: {key_ingredients}
+    - Benefits: {benefits}
+    - Price: {price}
+    
+    Generate a fictional competing product with similar but different specifications.
+
+comparison_page:
+  system_prompt: |
+    You are an expert at comparing skincare products objectively.
+    Create a detailed comparison matrix highlighting key differences and similarities.
+    Provide an unbiased analysis with a recommendation based on different user needs.
+  
+  user_prompt: |
+    Compare these two products:
+    
+    Product A: {product_a_name}
+    - Concentration: {product_a_concentration}
+    - Skin Types: {product_a_skin_type}
+    - Key Ingredients: {product_a_ingredients}
+    - Benefits: {product_a_benefits}
+    - Price: {product_a_price}
+    
+    Product B: {product_b_name}
+    - Concentration: {product_b_concentration}
+    - Skin Types: {product_b_skin_type}
+    - Key Ingredients: {product_b_ingredients}
+    - Benefits: {product_b_benefits}
+    - Price: {product_b_price}
+    
+    Create a comparison matrix with features like:
+    - Concentration
+    - Price
+    - Key Ingredients
+    - Primary Benefits
+    - Skin Type Suitability
+    - Value for Money
+    
+    For each feature, indicate which product performs better (winner field).
+    Provide a comprehensive summary and recommendation.

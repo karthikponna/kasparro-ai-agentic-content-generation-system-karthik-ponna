@@ -1,0 +1,25 @@
+system_prompt: |
+  You are an expert at generating user questions about skincare products.
+  Generate at least 15 diverse questions that users might ask about this product.
+  Categorize each question into one of these categories:
+  - Informational: General product information
+  - Safety: Safety concerns and precautions
+  - Usage: How to use the product
+  - Purchase: Buying decisions and pricing
+  - Comparison: Comparing with other products
+  - Ingredients: Questions about ingredients
+  - Benefits: Questions about benefits and results
+  
+  Ensure a good distribution across all categories.
+
+user_prompt: |
+  Product: {product_name}
+  Concentration: {concentration}
+  Skin Type: {skin_type}
+  Key Ingredients: {key_ingredients}
+  Benefits: {benefits}
+  How to Use: {how_to_use}
+  Side Effects: {side_effects}
+  Price: {price}
+  
+  Generate at least 15 questions across all categories.

@@ -1,11 +1,13 @@
 from typing import Dict, Any, List
+from loguru import logger
+from exceptions import ValidationError, LLMError, ContentGenerationError
 
 from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-
 from pydantic import BaseModel, Field
 
 from models import Question, QuestionCategory, WorkflowState
+from utils.prompt_loader import load_prompt
+from utils.llm_factory import create_structured_llm, invoke_with_retry
 
 
 class QuestionList(BaseModel):
@@ -16,56 +18,68 @@ class QuestionList(BaseModel):
 def generate_questions(state: WorkflowState) -> Dict[str, Any]:
     """
     Generate 15+ categorized user questions about the product.
+    
+    Args:
+        state: Current workflow state with product data
+        
+    Returns:
+        Updated state with generated questions
+        
+    Raises:
+        ValidationError: If product data is missing
+        LLMError: If LLM API call fails
     """
 
     try:
         product_data = state.product_data
 
         if not product_data:
-            return {"error": "Question Generator Error: No product data available"}
+            raise ValidationError(
+                "No product data available", 
+                {"agent": "question_generator"}
+            )
+        
+        logger.info(f"Generating questions for product: {product_data.product_name}")
         
         
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
-        structured_llm = llm.with_structured_output(QuestionList)
+        # Initialize LLM with structured output using factory
+        structured_llm = create_structured_llm(QuestionList)
 
-        prompt = ChatPromptTemplate.from_messages([
-            ("system", """You are an expert at generating user questions about skincare products.
-Generate at least 15 diverse questions that users might ask about this product.
-Categorize each question into one of these categories:
-- Informational: General product information
-- Safety: Safety concerns and precautions
-- Usage: How to use the product
-- Purchase: Buying decisions and pricing
-- Comparison: Comparing with other products
-- Ingredients: Questions about ingredients
-- Benefits: Questions about benefits and results
-
-Ensure a good distribution across all categories."""),
-            ("user", """Product: {product_name}
-Concentration: {concentration}
-Skin Type: {skin_type}
-Key Ingredients: {key_ingredients}
-Benefits: {benefits}
-How to Use: {how_to_use}
-Side Effects: {side_effects}
-Price: {price}
-
-Generate at least 15 questions across all categories.""")
-        ])
+        # Load prompt from YAML
+        prompt = load_prompt("question_generator")
 
         chain = prompt | structured_llm
-        result = chain.invoke({
-            "product_name": product_data.product_name,
-            "concentration": product_data.concentration,
-            "skin_type": ", ".join(product_data.skin_type),
-            "key_ingredients": ", ".join(product_data.key_ingredients),
-            "benefits": ", ".join(product_data.benefits),
-            "how_to_use": product_data.how_to_use,
-            "side_effects": product_data.side_effects,
-            "price": product_data.price
-        })
+        try:
+            result = invoke_with_retry(chain, {
+                "product_name": product_data.product_name,
+                "concentration": product_data.concentration,
+                "skin_type": ", ".join(product_data.skin_type),
+                "key_ingredients": ", ".join(product_data.key_ingredients),
+                "benefits": ", ".join(product_data.benefits),
+                "how_to_use": product_data.how_to_use,
+                "side_effects": product_data.side_effects,
+                "price": product_data.price
+            })
+        except Exception as e:
+            # Wrap LLM errors
+            if "openai" in str(type(e).__module__).lower() or "api" in str(e).lower():
+                raise LLMError(
+                    f"LLM API call failed: {str(e)}", 
+                    {"product": product_data.product_name}
+                ) from e
+            raise ContentGenerationError(f"Question generation failed: {str(e)}") from e
 
+        logger.info(f"Successfully generated {len(result.questions)} questions")
         return {"questions": result.questions}
     
-    except Exception as e:
-        return {"error": f"Question Generator Error: {str(e)}"}
+    except ValidationError as e:
+        logger.error(f"Validation error: {str(e)}", exc_info=True)
+        return {"error": str(e)}
+        
+    except LLMError as e:
+        logger.error(f"LLM error: {str(e)}", exc_info=True)
+        return {"error": str(e)}
+        
+    except ContentGenerationError as e:
+        logger.error(f"Content generation error: {str(e)}", exc_info=True)
+        return {"error": str(e)}

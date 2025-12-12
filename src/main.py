@@ -1,56 +1,63 @@
 import os
 import json
 import sys
-from typing import Dict, Any
+from pathlib import Path
+from typing import Union
+from pydantic import BaseModel
 
 from loguru import logger
 from config import settings
 
 from workflow import run_workflow
 
-os.environ["OPENAI_API_KEY"] = settings.OPENAI_API_KEY
 
-
-def load_product_data() -> Dict[str, Any]:
+def load_product_data(file_path: str = None) -> dict:
     """
-    Load the product data (GlowBoost Vitamin C Serum).
+    Load product data from JSON file.
     
+    Args:
+        file_path: Path to product data JSON file. Defaults to config setting.
+        
     Returns:
-        Product data dictionary
+        Product data dictionary.
+        
+    Raises:
+        FileNotFoundError: If the product data file doesn't exist.
+        json.JSONDecodeError: If the file contains invalid JSON.
     """
-    return {
-        "product_name": "GlowBoost Vitamin C Serum",
-        "concentration": "10% Vitamin C",
-        "skin_type": ["Oily", "Combination"],
-        "key_ingredients": ["Vitamin C", "Hyaluronic Acid"],
-        "benefits": ["Brightening", "Fades dark spots"],
-        "how_to_use": "Apply 2-3 drops in the morning before sunscreen",
-        "side_effects": "Mild tingling for sensitive skin",
-        "price": "₹699"
-    }
+    path = Path(file_path or settings.PRODUCT_DATA_PATH)
+    
+    if not path.exists():
+        raise FileNotFoundError(f"Product data file not found: {path}")
+    
+    with open(path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    logger.info(f"Loaded product data from: {path}")
+    return data
 
 
-def save_json_output(data: Any, filename: str, output_dir: str = "output") -> None:
+def save_json_output(data: Union[BaseModel, dict], filename: str, output_dir: str = None) -> None:
     """
     Save data as JSON file.
     
     Args:
         data: Data to save (Pydantic model or dict)
         filename: Output filename
-        output_dir: Output directory path
+        output_dir: Output directory path. Defaults to config setting.
     """
     try:
-        # create output directory if it doesn't exist
-        os.makedirs(output_dir, exist_ok=True)
+        output_path = Path(output_dir or settings.OUTPUT_DIR)
+        output_path.mkdir(parents=True, exist_ok=True)
         
-        # convert Pydantic model to dict if needed
-        if hasattr(data, "model_dump"):
+        # Convert Pydantic model to dict if needed
+        if isinstance(data, BaseModel):
             data_dict = data.model_dump()
         else:
             data_dict = data
         
-        # write JSON file
-        filepath = os.path.join(output_dir, filename)
+        # Write JSON file
+        filepath = output_path / filename
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data_dict, f, indent=2, ensure_ascii=False)
         
@@ -65,7 +72,7 @@ def main() -> None:
     try:
 
         product_data = load_product_data()
-        logger.info(f"Loaded: {product_data['product_name']}")
+        logger.info(f"Loaded: {product_data.get('product_name', 'Unknown Product')}")
 
         final_state = run_workflow(product_data)
 
@@ -76,20 +83,20 @@ def main() -> None:
         if final_state.faq_page:
             save_json_output(final_state.faq_page, "faq.json")
         else:
-            print("FAQ page not generated")
+            logger.warning("FAQ page not generated")
         
         if final_state.product_page:
             save_json_output(final_state.product_page, "product_page.json")
         else:
-            print("Product page not generated")
+            logger.warning("Product page not generated")
         
         if final_state.comparison_page:
             save_json_output(final_state.comparison_page, "comparison_page.json")
         else:
-            print("Comparison page not generated")
+            logger.warning("Comparison page not generated")
 
     except Exception as e:
-        print(f"Fatal Error: {str(e)}")
+        logger.critical(f"Fatal Error: {str(e)}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

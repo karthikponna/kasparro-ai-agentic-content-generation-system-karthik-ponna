@@ -17,3 +17,9 @@ help:
 
 run-agent:
 	uv run python src/main.py
+
+
+# --- tests ---
+
+run-test:
+	uv run pytest tests/ -v

@@ -15,6 +15,40 @@ class Settings(BaseSettings):
         description="API key for OpenAI service authentication."
     )
 
+    # LLM Configuration
+    LLM_MODEL_NAME: str = Field(
+        default="gpt-4o-mini",
+        description="OpenAI model name to use for LLM calls."
+    )
+
+    LLM_TEMPERATURE: float = Field(
+        default=0.7,
+        description="Temperature setting for LLM responses."
+    )
+
+    # Retry Configuration (Point 15)
+    LLM_MAX_RETRIES: int = Field(
+        default=3,
+        description="Maximum number of retries for transient LLM errors."
+    )
+    
+    LLM_RETRY_DELAY: float = Field(
+        default=1.0,
+        description="Delay in seconds between retries."
+    )
+
+    # Data Configuration
+    PRODUCT_DATA_PATH: str = Field(
+        default="data/product_data.json",
+        description="Path to product data JSON file."
+    )
+
+    # Output Configuration
+    OUTPUT_DIR: str = Field(
+        default="output",
+        description="Directory for output JSON files."
+    )
+
 
     @field_validator("OPENAI_API_KEY")
     @classmethod
