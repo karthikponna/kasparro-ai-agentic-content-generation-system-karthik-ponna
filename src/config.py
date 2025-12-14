@@ -45,7 +45,7 @@ class Settings(BaseSettings):
 
     # Output Configuration
     OUTPUT_DIR: str = Field(
-        default="output",
+        default="expected_output",
         description="Directory for output JSON files."
     )
 
