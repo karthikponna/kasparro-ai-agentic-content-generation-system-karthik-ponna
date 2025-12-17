@@ -1,0 +1,84 @@
+{
+  "page_type": "Comparison",
+  "product_a": {
+    "product_name": "GlowBoost Vitamin C Serum",
+    "concentration": "10% Vitamin C",
+    "skin_type": [
+      "Oily",
+      "Combination"
+    ],
+    "key_ingredients": [
+      "Vitamin C",
+      "Hyaluronic Acid"
+    ],
+    "benefits": [
+      "Brightening",
+      "Fades dark spots"
+    ],
+    "how_to_use": "Apply 2-3 drops in the morning before sunscreen",
+    "side_effects": "Mild tingling for sensitive skin",
+    "price": "₹699"
+  },
+  "product_b": {
+    "product_name": "Radiance Plus Vitamin C Serum",
+    "concentration": "12% Vitamin C",
+    "skin_type": [
+      "Normal",
+      "Dry",
+      "Combination"
+    ],
+    "key_ingredients": [
+      "Vitamin C",
+      "Niacinamide",
+      "Hyaluronic Acid",
+      "Green Tea Extract"
+    ],
+    "benefits": [
+      "Brightening",
+      "Fades dark spots",
+      "Reduces fine lines",
+      "Soothes and calms skin"
+    ],
+    "price": "₹850"
+  },
+  "comparison_matrix": [
+    {
+      "feature_name": "Concentration",
+      "product_a_value": "10% Vitamin C",
+      "product_b_value": "12% Vitamin C",
+      "winner": "Product B"
+    },
+    {
+      "feature_name": "Price",
+      "product_a_value": "₹699",
+      "product_b_value": "₹850",
+      "winner": "Product A"
+    },
+    {
+      "feature_name": "Key Ingredients",
+      "product_a_value": "Vitamin C, Hyaluronic Acid",
+      "product_b_value": "Vitamin C, Niacinamide, Hyaluronic Acid, Green Tea Extract",
+      "winner": "Product B"
+    },
+    {
+      "feature_name": "Primary Benefits",
+      "product_a_value": "Brightening, Fades dark spots",
+      "product_b_value": "Brightening, Fades dark spots, Reduces fine lines, Soothes and calms skin",
+      "winner": "Product B"
+    },
+    {
+      "feature_name": "Skin Type Suitability",
+      "product_a_value": "Oily, Combination",
+      "product_b_value": "Normal, Dry, Combination",
+      "winner": "Product B"
+    },
+    {
+      "feature_name": "Value for Money",
+      "product_a_value": "Higher value due to lower price",
+      "product_b_value": "Higher concentration, but pricier",
+      "winner": "Product A"
+    }
+  ],
+  "summary": "Both products are Vitamin C serums aimed at brightening the skin and fading dark spots. Product A offers a lower concentration at a more affordable price, making it suitable for those primarily looking to target dark spots on oily and combination skin. However, Product B provides a higher concentration of Vitamin C, additional beneficial ingredients such as Niacinamide and Green Tea Extract, and is suitable for a broader range of skin types, including normal and dry skin. It also boasts additional benefits like reducing fine lines and soothing the skin, making it a more comprehensive skincare solution despite the higher price.",
+  "recommendation": "For users looking for an effective and affordable option specifically for oily or combination skin, Product A (GlowBoost Vitamin C Serum) is recommended. However, for those seeking a more powerful serum with additional skin benefits and suitable for various skin types, Product B (Radiance Plus Vitamin C Serum) would be the better choice, despite its higher price."
+}

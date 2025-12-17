@@ -1,0 +1,67 @@
+{
+  "page_type": "Product",
+  "product_name": "GlowBoost Vitamin C Serum",
+  "tagline": "Illuminate Your Skin with the Power of Vitamin C!",
+  "sections": [
+    {
+      "section_name": "Overview",
+      "content": "Transform your skincare routine with GlowBoost Vitamin C Serum, a potent yet gentle formula designed to enhance radiance and diminish dark spots. Infused with 10% Vitamin C, this serum works tirelessly to brighten your complexion while hydrating your skin with Hyaluronic Acid. Perfect for oily and combination skin types, it revitalizes your skin’s natural glow, leaving it looking fresh and youthful. Experience the invigorating benefits of a serum that not only targets imperfections but also protects against environmental stressors. Say goodbye to dullness and hello to a luminous, vibrant you!"
+    },
+    {
+      "section_name": "Benefits",
+      "content": "**Benefits**: Unlock your skin’s radiant potential with our GlowBoost Vitamin C Serum. Formulated with a potent 10% concentration of Vitamin C, this serum is designed to brighten your complexion and reduce the appearance of dark spots, giving you a youthful glow. With regular use, expect a visibly brighter skin tone as Vitamin C works to inhibit melanin production, helping to fade pigmentation and even out skin tone. Additionally, the inclusion of Hyaluronic Acid ensures your skin stays hydrated and plump, enhancing the effectiveness of Vitamin C by allowing for better absorption and preventing moisture loss. Experience the confidence that comes with a luminous, clear, and revitalized complexion."
+    },
+    {
+      "section_name": "Key Ingredients",
+      "content": "**Ingredients**: Our GlowBoost Vitamin C Serum combines the power of two key ingredients to maximize your skincare results: 1. **Vitamin C (Ascorbic Acid)**: Known for its antioxidant properties, Vitamin C helps brighten the skin and reduce the appearance of dark spots, leaving your complexion looking radiant and youthful. It also protects against environmental stressors while stimulating collagen production, which is essential for maintaining skin elasticity. 2. **Hyaluronic Acid**: This powerhouse ingredient acts as a humectant, drawing moisture into the skin and keeping it hydrated throughout the day. Hyaluronic Acid helps to plump the skin, reducing the appearance of fine lines and enhancing the overall texture, ensuring that your skin remains smooth and supple. Together, these ingredients create a synergistic effect for a healthier, glowing complexion."
+    },
+    {
+      "section_name": "How to Use",
+      "content": "**Usage**: Achieve optimal results with our GlowBoost Vitamin C Serum by following these simple steps: 1. Begin with a clean, dry face. Use your favorite cleanser to remove any impurities. 2. Pat your skin dry gently with a clean towel. 3. Dispense 2-3 drops of the serum onto your fingertips. 4. Gently massage the serum onto your face and neck, using upward motions for better absorption. 5. Allow the serum to absorb for a minute before applying your regular moisturizer. 6. Finish with a broad-spectrum sunscreen during the day to protect your skin from UV damage. For best results, incorporate it into your morning skincare routine."
+    },
+    {
+      "section_name": "Safety Information",
+      "content": "**Safety**: Our GlowBoost Vitamin C Serum is suitable for oily and combination skin types. However, as with any new skincare product, it’s advisable to perform a patch test prior to full application, especially for those with sensitive skin. Apply a small amount of serum on the inner wrist or behind the ear and wait 24 hours to check for any adverse reactions. Mild tingling may occur upon application, which is normal; however, if you experience significant irritation or redness, discontinue use and consult a dermatologist. Store in a cool, dry place away from direct sunlight to maintain the efficacy of the serum. Always follow up with sunscreen during the day to protect your skin from UV rays and prevent further pigmentation."
+    },
+    {
+      "section_name": "Pricing",
+      "content": "At just ₹699, GlowBoost Vitamin C Serum is an investment in your skin’s future. Crafted with high-quality ingredients, this serum is designed for maximum efficacy and results. Each bottle is formulated to deliver visible improvements in skin tone and texture, making it a smart choice for anyone seeking to elevate their skincare regimen. Enjoy the luxury of professional-grade skincare in the comfort of your home, and let your skin shine with confidence!"
+    }
+  ],
+  "metadata": {
+    "concentration": "10% Vitamin C",
+    "skin_types": [
+      "Oily",
+      "Combination"
+    ],
+    "key_ingredients": [
+      "Vitamin C",
+      "Hyaluronic Acid"
+    ],
+    "benefits": [
+      "Brightening",
+      "Fades dark spots"
+    ],
+    "how_to_use": "Apply 2-3 drops in the morning before sunscreen",
+    "side_effects": "Mild tingling for sensitive skin",
+    "price": "₹699",
+    "total_sections": 6,
+    "content_block_metadata": {
+      "benefits": {
+        "benefit_count": 2
+      },
+      "usage": {
+        "skin_types": [
+          "Oily",
+          "Combination"
+        ]
+      },
+      "ingredients": {
+        "ingredient_count": 2
+      },
+      "safety": {
+        "side_effects": "Mild tingling for sensitive skin"
+      }
+    }
+  }
+}
